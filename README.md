@@ -1,0 +1,2 @@
+# blazorlab
+Лаборатория Blazor Webassembly
