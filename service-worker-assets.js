@@ -293,9 +293,9 @@
       "url": "js\/jquery\/jquery.min.map"
     },
     {
-      "hash": "sha256-z+QhbU63fmWMIQGP0ceVAThkwvPPrUDu74pbWkwIPng=",
+      "hash": "sha256-WvIc8G8MjYArg2CGt6NqFIAS1\/NA48KYwiCGnexkNJM=",
       "url": "manifest.json"
     }
   ],
-  "version": "+r\/AJ30h"
+  "version": "NThcShCg"
 };
