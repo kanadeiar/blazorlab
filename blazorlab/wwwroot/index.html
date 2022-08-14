@@ -47,7 +47,21 @@
     <script src="js/bootstrap/bootstrap.min.js"></script>
     <script src="js/jquery/jquery.min.js"></script>
     <script src="_framework/blazor.webassembly.js"></script>
-    <script>navigator.serviceWorker.register('service-worker.js');</script>
+<script>
+    if ('serviceWorker' in navigator) {
+        //navigator.serviceWorker
+        //    .register('service-worker.js')
+        //    .then(reg => console.log('Service Worker: Registered (Blazor)'))
+        //    .catch(err => console.log(`Service Worker: Error: ${err}`));
+        window.addEventListener('load', () => {
+            navigator.serviceWorker
+                .register('service-worker.js')
+                .then(reg => console.log('Service Worker: Registered (Pages)'))
+                .catch(err => console.log(`Service Worker: Error: ${err}`));
+        });
+    }
+    //navigator.serviceWorker.register('service-worker.js');
+</script>
 </body>
 
 </html>
