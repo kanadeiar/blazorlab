@@ -15,47 +15,76 @@ async function onInstall(event) {
     console.info('Service worker: Install');
 
     // Fetch and cache all matching items from the assets manifest
-    const assetsRequests = self.assetsManifest.assets
-        .filter(asset => offlineAssetsInclude.some(pattern => pattern.test(asset.url)))
-        .filter(asset => !offlineAssetsExclude.some(pattern => pattern.test(asset.url)))
-        .map(asset => new Request(asset.url, { integrity: asset.hash, cache: 'no-cache' }));
+    //const assetsRequests = self.assetsManifest.assets
+    //    .filter(asset => offlineAssetsInclude.some(pattern => pattern.test(asset.url)))
+    //    .filter(asset => !offlineAssetsExclude.some(pattern => pattern.test(asset.url)))
+    //    .map(asset => new Request(asset.url, { integrity: asset.hash, cache: 'no-cache' }));
 //#if(IndividualLocalAuth && Hosted)
 
     // Also cache authentication configuration
-    assetsRequests.push(new Request('_configuration/blazorlab'));
+    //assetsRequests.push(new Request('_configuration/blazorlab'));
 
 //#endif
-    await caches.open(cacheName).then(cache => cache.addAll(assetsRequests));
+    //await caches.open(cacheName).then(cache => cache.addAll(assetsRequests));
 }
 
 async function onActivate(event) {
     console.info('Service worker: Activate');
 
     // Delete unused caches
-    const cacheKeys = await caches.keys();
-    await Promise.all(cacheKeys
-        .filter(key => key.startsWith(cacheNamePrefix) && key !== cacheName)
-        .map(key => caches.delete(key)));
+    //const cacheKeys = await caches.keys();
+    //await Promise.all(cacheKeys
+    //    .filter(key => key.startsWith(cacheNamePrefix) && key !== cacheName)
+    //    .map(key => caches.delete(key)));
+    e.waitUntil(
+        caches.keys().then(cacheNames => {
+            return Promise.all(
+                cacheNames.map(cache => {
+                    if (cache !== cacheName) {
+                        console.log('Service Worker: Clearing Old Cache');
+                        return caches.delete(cache);
+                    }
+                })
+            );
+        })
+    );
 }
 
 async function onFetch(event) {
-    let cachedResponse = null;
-    if (event.request.method === 'GET') {
-        // For all navigation requests, try to serve index.html from cache
-        // If you need some URLs to be server-rendered, edit the following check to exclude those URLs
-//#if(IndividualLocalAuth && Hosted)
-        const shouldServeIndexHtml = event.request.mode === 'navigate'
-            && !event.request.url.includes('/connect/')
-            && !event.request.url.includes('/Identity/');
-//#else
-        //const shouldServeIndexHtml = event.request.mode === 'navigate';
-//#endif
+    console.log('Service Worker: Fetching');
 
-        const request = shouldServeIndexHtml ? 'index.html' : event.request;
-        const cache = await caches.open(cacheName);
-        cachedResponse = await cache.match(request);
-    }
+    e.respondWith(
+        fetch(e.request)
+            .then(res => {
+                // Make copy/clone of response
+                const resClone = res.clone();
+                // Open cahce
+                caches.open(cacheName).then(cache => {
+                    // Add response to cache
+                    cache.put(e.request, resClone);
+                });
+                return res;
+            })
+            .catch(err => caches.match(e.request).then(res => res))
+    );
 
-    return cachedResponse || fetch(event.request);
+//    let cachedResponse = null;
+//    if (event.request.method === 'GET') {
+//        // For all navigation requests, try to serve index.html from cache
+//        // If you need some URLs to be server-rendered, edit the following check to exclude those URLs
+////#if(IndividualLocalAuth && Hosted)
+//        const shouldServeIndexHtml = event.request.mode === 'navigate'
+//            && !event.request.url.includes('/connect/')
+//            && !event.request.url.includes('/Identity/');
+////#else
+//        //const shouldServeIndexHtml = event.request.mode === 'navigate';
+////#endif
+
+//        const request = shouldServeIndexHtml ? 'index.html' : event.request;
+//        const cache = await caches.open(cacheName);
+//        cachedResponse = await cache.match(request);
+//    }
+
+//    return cachedResponse || fetch(event.request);
 }
-/* Manifest version: iuwCqZH3 */
+/* Manifest version: IBUyhgYe */
