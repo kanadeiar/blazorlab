@@ -1,7 +1,7 @@
 {
   "name": "blazorlab - опытно-экспериментальное приложение",
   "short_name": "blazorlab",
-  "start_url": "./blazorlab/",
+  "start_url": ".",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#03173d",
