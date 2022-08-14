@@ -36,7 +36,7 @@ async function onActivate(event) {
     //await Promise.all(cacheKeys
     //    .filter(key => key.startsWith(cacheNamePrefix) && key !== cacheName)
     //    .map(key => caches.delete(key)));
-    e.waitUntil(
+    event.waitUntil(
         caches.keys().then(cacheNames => {
             return Promise.all(
                 cacheNames.map(cache => {
@@ -53,19 +53,19 @@ async function onActivate(event) {
 async function onFetch(event) {
     console.log('Service Worker: Fetching');
 
-    e.respondWith(
-        fetch(e.request)
+    event.respondWith(
+        fetch(event.request)
             .then(res => {
                 // Make copy/clone of response
                 const resClone = res.clone();
                 // Open cahce
                 caches.open(cacheName).then(cache => {
                     // Add response to cache
-                    cache.put(e.request, resClone);
+                    cache.put(event.request, resClone);
                 });
                 return res;
             })
-            .catch(err => caches.match(e.request).then(res => res))
+            .catch(err => caches.match(event.request).then(res => res))
     );
 
 //    let cachedResponse = null;
