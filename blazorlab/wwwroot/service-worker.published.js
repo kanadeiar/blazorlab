@@ -4,7 +4,7 @@
 self.importScripts('./service-worker-assets.js');
 self.addEventListener('install', event => event.waitUntil(onInstall(event)));
 self.addEventListener('activate', event => event.waitUntil(onActivate(event)));
-self.addEventListener('fetch', event => event.respondWith(onFetch(event)));
+//self.addEventListener('fetch', event => event.respondWith(onFetch(event)));
 
 const cacheNamePrefix = 'offline-cache-';
 const cacheName = `${cacheNamePrefix}${self.assetsManifest.version}`;
@@ -50,23 +50,41 @@ async function onActivate(event) {
     );
 }
 
-async function onFetch(event) {
+self.addEventListener('fetch', e => {
     console.log('Service Worker: Fetching');
-
-    event.respondWith(
-        fetch(event.request)
+    e.respondWith(
+        fetch(e.request)
             .then(res => {
                 // Make copy/clone of response
                 const resClone = res.clone();
                 // Open cahce
                 caches.open(cacheName).then(cache => {
                     // Add response to cache
-                    cache.put(event.request, resClone);
+                    cache.put(e.request, resClone);
                 });
                 return res;
             })
-            .catch(err => caches.match(event.request).then(res => res))
+            .catch(err => caches.match(e.request).then(res => res))
     );
+});
+
+//async function onFetch(event) {
+//    console.log('Service Worker: Fetching');
+
+//    event.respondWith(
+//        fetch(event.request)
+//            .then(res => {
+//                // Make copy/clone of response
+//                const resClone = res.clone();
+//                // Open cahce
+//                caches.open(cacheName).then(cache => {
+//                    // Add response to cache
+//                    cache.put(event.request, resClone);
+//                });
+//                return res;
+//            })
+//            .catch(err => caches.match(event.request).then(res => res))
+//    );
 
 //    let cachedResponse = null;
 //    if (event.request.method === 'GET') {
@@ -86,4 +104,5 @@ async function onFetch(event) {
 //    }
 
 //    return cachedResponse || fetch(event.request);
-}
+
+//}
