@@ -4,24 +4,36 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#198754">
 
-    <link href="css/ConnectionErrors.css" rel="stylesheet"/>
+    <link href="css/errors.css" rel="stylesheet" />
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
     <link href="css/main.css" rel="stylesheet" />
 
-    <link href="blazorlab.styles.css" rel="stylesheet"/>
+    <link href="blazorlab.styles.css" rel="stylesheet" />
 
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" type="image/png" href="favicon.png" sizes="500x500">
 
     <base href="/" />
+
+    <link href="manifest.json" rel="manifest" />
+    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
+
     <component type="typeof(HeadOutlet)" render-mode="WebAssemblyPrerendered" />
 </head>
 
 <body>
     <div id="app">
-        <div class="h5 text-center">Загрузка приложения ...</div>
+        <div style="position:absolute; top:30vh; width:100%; text-align:center">
+            <h1>blazorlab</h1>
+            <div style="display:flex; gap:10px; justify-content:center; align-items:center">
+                <div class="spinner-border text-success" role="status"></div>
+                Загрузка приложения, подождите ...
+            </div>
+        </div>
     </div>
 
     <div id="blazor-error-ui">
@@ -35,6 +47,7 @@
     <script src="js/bootstrap/bootstrap.min.js"></script>
     <script src="js/jquery/jquery.min.js"></script>
     <script src="_framework/blazor.webassembly.js"></script>
+    <script>navigator.serviceWorker.register('service-worker.js');</script>
 </body>
 
 </html>
