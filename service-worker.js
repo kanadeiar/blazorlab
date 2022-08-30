@@ -106,4 +106,4 @@ self.addEventListener('fetch', e => {
 //    return cachedResponse || fetch(event.request);
 
 //}
-/* Manifest version: gcOAC/WW */
+/* Manifest version: zcq5o4X+ */
